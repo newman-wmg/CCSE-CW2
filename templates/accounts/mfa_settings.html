@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Two-Factor Authentication Settings</h2>
+    
+    {% if mfa_enabled %}
+        <div class="alert alert-success">
+            Two-factor authentication is currently enabled.
+        </div>
+        <form method="post" action="{% url 'accounts:disable_mfa' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Disable 2FA</button>
+        </form>
+    {% else %}
+        <div class="alert alert-warning">
+            Two-factor authentication is currently disabled.
+        </div>
+        <a href="{% url 'accounts:enable_mfa' %}" class="btn btn-primary">Enable 2FA</a>
+    {% endif %}
+    
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary">Back</a>
+</div>
+{% endblock %} 

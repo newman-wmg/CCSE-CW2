@@ -1,0 +1,38 @@
+# Core
+Django
+Pillow  # For image handling (used in catalog models)
+
+# Authentication & Security
+django-otp
+qrcode[pil]  # For generating QR codes for 2FA
+
+# Database
+psycopg2-binary
+dj-database-url  # For parsing database URLs
+
+# Payment Processing
+stripe 
+
+# Honeypot to log unauthorized admin access attempts
+django-admin-honeypot-updated-2021
+
+# Session timeout
+django-auto-logout
+pytz
+
+# Content Security Policy middleware
+django-csp 
+
+# For generating and handling SSL certificates
+django-extensions
+werkzeug
+pyOpenSSL
+
+# For loading environment variables from .env file
+python-dotenv
+
+# Whitenoise
+whitenoise
+
+# Production server
+gunicorn

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/pages.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="jumbotron text-center bg-light p-5 rounded">
+        <h1 class="display-4">Welcome to SecureCart</h1>
+        <p class="lead">Your trusted destination for quality furniture</p>
+        <hr class="my-4">
+        <p>Discover our wide range of home furnishings and create your perfect space.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'catalog:product_list' %}" role="button">Shop Now</a>
+    </div>
+
+    <!-- Featured Products Section -->
+    <h2 class="text-center mt-5 mb-4">Featured Products</h2>
+    <div class="row">
+        {% for product in featured_products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top featured-product-image" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted">{{ product.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 mb-0">£{{ product.price }}</span>
+                            <a href="{% url 'catalog:product_detail' product.slug %}" class="btn btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>No featured products available at the moment.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Categories Section -->
+    <h2 class="text-center mt-5 mb-4">Browse Categories</h2>
+    <div class="row">
+        {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" class="card-img-top category-image" alt="{{ category.name }}">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="card-title mb-3">{{ category.name }}</h5>
+                        <a href="{% url 'catalog:category_products' category.slug %}" class="btn btn-outline-primary">
+                            Browse {{ category.name }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>No categories available at the moment.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="text-center bg-light p-5 rounded mt-5">
+        <h3>Ready to Transform Your Home?</h3>
+        <p class="lead">Explore our complete collection of quality furniture.</p>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">View All Products</a>
+    </div>
+
+{% endblock %} 

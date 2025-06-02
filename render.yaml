@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: securecart-app
+    env: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    startCommand: gunicorn securecart.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: securecart.settings
+      - key: DEBUG
+        value: "0"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: securecart-db
+          property: connectionString
+      - key: SECRET_KEY
+        fromSecret: SECRET_KEY
+      - key: STRIPE_SECRET_KEY
+        fromSecret: STRIPE_SECRET_KEY
+      - key: STRIPE_PUBLISHABLE_KEY
+        fromSecret: STRIPE_PUBLISHABLE_KEY
+      - key: EMAIL_HOST_USER
+        fromSecret: EMAIL_HOST_USER
+      - key: EMAIL_HOST_PASSWORD
+        fromSecret: EMAIL_HOST_PASSWORD
+    healthCheckPath: /health/
+    autoDeploy: false
+
+databases:
+  - name: securecart-db
+    plan: free
+    region: frankfurt

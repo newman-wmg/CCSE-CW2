@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Shipping Address{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{% if is_edit %}Edit{% else %}Add{% endif %} Shipping Address</h2>
+                    <p class="text-muted">Fields marked with * are required.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">Full Name *</label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}
+                                <div class="invalid-feedback d-block">{{ form.full_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.street_address1.id_for_label }}" class="form-label">Street Address *</label>
+                                {{ form.street_address1 }}
+                                {% if form.street_address1.errors %}
+                                <div class="invalid-feedback d-block">{{ form.street_address1.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.street_address2.id_for_label }}" class="form-label">Street Address 2 (Optional)</label>
+                                {{ form.street_address2 }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.city.id_for_label }}" class="form-label">City *</label>
+                                {{ form.city }}
+                                {% if form.city.errors %}
+                                <div class="invalid-feedback d-block">{{ form.city.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.state_province.id_for_label }}" class="form-label">State/Province (Optional)</label>
+                                {{ form.state_province }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.postal_code.id_for_label }}" class="form-label">Postal Code *</label>
+                                {{ form.postal_code }}
+                                {% if form.postal_code.errors %}
+                                <div class="invalid-feedback d-block">{{ form.postal_code.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.country.id_for_label }}" class="form-label">Country *</label>
+                                {{ form.country }}
+                                {% if form.country.errors %}
+                                <div class="invalid-feedback d-block">{{ form.country.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number (Optional)</label>
+                                {{ form.phone_number }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.delivery_instructions.id_for_label }}" class="form-label">Delivery Instructions (Optional)</label>
+                                {{ form.delivery_instructions }}
+                                <small class="text-muted">Add any special instructions for delivery here.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Address</button>
+                            <a href="{% url next_url %}" class="btn btn-secondary">Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

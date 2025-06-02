@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>My Account</h2>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Account Information</h5>
+                    <p class="card-text">
+                        <strong>Name:</strong> {{ user.get_full_name }}<br>
+                        <strong>Email:</strong> {{ user.email }}<br>
+                        <strong>Username:</strong> {{ user.username }}<br>
+                    </p>
+                    <a href="{% url 'accounts:edit' %}" class="btn btn-primary">Edit Profile</a>
+                    <a href="{% url 'accounts:mfa_settings' %}" class="btn btn-secondary mt-2">Two-Factor Authentication</a>
+                </div>
+            </div>
+
+            <!-- New Address Card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Shipping Addresses</h5>
+                    {% if has_addresses %}
+                        <p class="text-muted">You have {{ address_count }} saved address{{ address_count|pluralize:"es" }}</p>
+                    {% else %}
+                        <div class="alert alert-warning mb-3">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Please add a shipping address to enable checkout.
+                        </div>
+                    {% endif %}
+                    <a href="{% url 'accounts:manage_addresses' %}" class="btn btn-primary">Manage Addresses</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title">Recent Orders</h5>
+                        {% if recent_orders %}
+                        <a href="{% url 'orders:order_list' %}" class="btn btn-primary btn-sm">View All Orders</a>
+                        {% endif %}
+                    </div>
+                    
+                    {% if recent_orders %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <span class="badge {% if order.status == 'pending' %}bg-warning
+                                                             {% elif order.status == 'shipped' %}bg-info
+                                                             {% elif order.status == 'delivered' %}bg-success
+                                                             {% else %}bg-danger{% endif %}">
+                                                {{ order.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>£{{ order.total_amount }}</td>
+                                        <td>
+                                            <a href="{% url 'orders:detail' order.id %}?from=dashboard" class="btn btn-sm btn-primary">View Details</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="card-text">
+                            You haven't placed any orders yet.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

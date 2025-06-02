@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Addresses{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/accounts.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>My Addresses</h2>
+                <a href="{% url 'accounts:add_address' %}" class="btn btn-primary">Add New Address</a>
+            </div>
+            <div class="mb-3">
+                <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary">Back</a>
+            </div>
+
+            {% if addresses %}
+                <div class="row">
+                    {% for address in addresses %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ address.full_name }}</h5>
+                                <p class="card-text">
+                                    {{ address.street_address1 }}<br>
+                                    {% if address.street_address2 %}
+                                        {{ address.street_address2 }}<br>
+                                    {% endif %}
+                                    {{ address.city }}{% if address.state_province %}, {{ address.state_province }}{% endif %}<br>
+                                    {{ address.postal_code }}<br>
+                                    {{ address.country }}<br>
+                                    {% if address.phone_number %}
+                                        <strong>Phone:</strong> {{ address.phone_number }}<br>
+                                    {% endif %}
+                                    {% if address.delivery_instructions %}
+                                        <strong>Delivery Instructions:</strong><br>
+                                        {{ address.delivery_instructions }}
+                                    {% endif %}
+                                </p>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% url 'accounts:edit_address' address.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                    <form method="post" action="{% url 'accounts:delete_address' address.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm delete-address-btn">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    You haven't added any addresses yet. 
+                    <a href="{% url 'accounts:add_address' %}" class="alert-link">Add your first address</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

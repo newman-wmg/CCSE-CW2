@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2>Your Shopping Cart</h2>
+    
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>
+                        <form class="update-quantity-form" data-item-id="{{ item.id }}">
+                            <input type="number" 
+                                   name="quantity" 
+                                   value="{{ item.quantity }}" 
+                                   min="1" 
+                                   max="{{ item.product.stock }}"
+                                   class="form-control quantity-input">
+                        </form>
+                    </td>
+                    <td>£{{ item.product.price }}</td>
+                    <td>£{{ item.get_cost }}</td>
+                    <td>
+                        <a href="{% url 'cart:remove_from_cart' item.id %}" class="btn btn-danger btn-sm">Remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Total:</strong></td>
+                    <td colspan="2"><strong>£{{ cart.get_total_price }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="mt-4 d-flex justify-content-between">
+            <form action="{% url 'cart:clear_cart' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Clear Cart</button>
+            </form>
+            <div>
+                <a href="{% url 'catalog:product_list' %}" class="btn btn-primary me-2">Continue Shopping</a>
+                <a href="{% url 'orders:checkout' %}" class="btn btn-success">Proceed to Checkout</a>
+            </div>
+        </div>
+    {% else %}
+        <p>Your cart is empty.</p>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Start Shopping</a>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}
+{% endblock %} 

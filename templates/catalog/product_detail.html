@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'catalog:category_list' %}">Categories</a></li>
+            <li class="breadcrumb-item"><a href="{{ product.subcategory.main_category.get_absolute_url }}">
+                {{ product.subcategory.main_category.name }}
+            </a></li>
+            <li class="breadcrumb-item"><a href="{{ product.subcategory.get_absolute_url }}">
+                {{ product.subcategory.name }}
+            </a></li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-6">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid" alt="{{ product.name }}">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            <p class="lead">£{{ product.price }}</p>
+            
+            <!-- Product Details Tabs -->
+            <ul class="nav nav-tabs mb-3" id="productTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="description-tab" data-bs-toggle="tab" href="#description" role="tab">
+                        Description
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="weight_and_measurements-tab" data-bs-toggle="tab" href="#weight_and_measurements" role="tab">
+                        Weight & Measurements
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="productTabsContent">
+                <div class="tab-pane fade show active" id="description" role="tabpanel">
+                    <p>{{ product.description }}</p>
+                </div>
+                <div class="tab-pane fade" id="weight_and_measurements" role="tabpanel">
+                    {% if product.weight_and_measurements %}
+                        <p>{{ product.weight_and_measurements }}</p>
+                    {% else %}
+                        <p>No weight or measurements provided</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if product.stock > 0 %}
+                {% if user.is_staff %}
+                    <button class="btn btn-primary" disabled>Add to Cart</button>
+                {% else %}
+                    <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <button class="btn btn-secondary" disabled>Out of Stock</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

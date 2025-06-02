@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load order_tags %}
+
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/orders.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card">
+        <div class="card-body">
+            <h2>Order Details</h2>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Order Number:</strong> #{{ order.id }}</p>
+                    <p><strong>Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge {% if order.status == 'pending' %}bg-warning
+                                       {% elif order.status == 'shipped' %}bg-info
+                                       {% elif order.status == 'delivered' %}bg-success
+                                       {% else %}bg-danger{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </p>
+                    {% if order.tracking_number %}
+                    <p><strong>Tracking Number:</strong> {{ order.tracking_number }}</p>
+                    {% endif %}
+                    <h5>Shipping Address</h5>
+                    <p>
+                        {{ order.shipping_address.full_name }}<br>
+                        {{ order.shipping_address.street_address1 }}<br>
+                        {% if order.shipping_address.street_address2 %}
+                            {{ order.shipping_address.street_address2 }}<br>
+                        {% endif %}
+                        {{ order.shipping_address.city }}{% if order.shipping_address.state_province %}, {{ order.shipping_address.state_province }}{% endif %}<br>
+                        {{ order.shipping_address.postal_code }}<br>
+                        {{ order.shipping_address.country }}<br>
+                        {% if order.shipping_address.phone_number %}
+                            <strong>Phone:</strong> {{ order.shipping_address.phone_number }}<br>
+                        {% endif %}
+                        {% if order.shipping_address.delivery_instructions %}
+                            <strong>Delivery Instructions:</strong><br>
+                            {{ order.shipping_address.delivery_instructions }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <h4>Order Items</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>£{{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>£{{ item.price|multiply:item.quantity }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td><strong>£{{ order.total_amount }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="mt-4">
+                {% if came_from == 'dashboard' %}
+                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">Back</a>
+                {% else %}
+                    <a href="{% url 'orders:order_list' %}" class="btn btn-secondary">Back</a>
+                {% endif %}
+                {% if order.can_cancel %}
+                <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger cancel-order-btn">
+                        Cancel Order
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

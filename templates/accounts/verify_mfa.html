@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Verify Two-Factor Authentication</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <p>Please enter the 6-digit verification code from your authenticator app:</p>
+            <form method="post" action="{% url 'accounts:verify_mfa' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="token" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Verify</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

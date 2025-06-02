@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #f8f9fa; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .footer { text-align: center; padding: 20px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Order Confirmation</h2>
+        </div>
+        <div class="content">
+            <p>Dear {{ order.user.get_full_name|default:order.user.username }},</p>
+            <p>Thank you for your order! We're pleased to confirm that your order has been received and is being processed.</p>
+            
+            <h3>Order Details:</h3>
+            <p><strong>Order Number:</strong> #{{ order.id }}</p>
+            <p><strong>Order Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}</p>
+            
+            <h4>Order Summary:</h4>
+            <ul>
+            {% for item in order.items.all %}
+                <li>{{ item.quantity }}x {{ item.product.name }} - £{{ item.price }}</li>
+            {% endfor %}
+            </ul>
+            
+            <p><strong>Total Amount:</strong> £{{ order.total_amount }}</p>
+            
+            <p>We'll notify you when your order has been shipped.</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for shopping with SecureCart!</p>
+        </div>
+    </div>
+</body>
+</html> 

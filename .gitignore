@@ -1,0 +1,26 @@
+# python
+__pycache__/
+*.py[cod]
+
+# django
+media/*
+!media/.gitkeep
+!media/categories/
+!media/products/
+media/categories/*
+!media/categories/.gitkeep
+media/products/*
+!media/products/.gitkeep
+staticfiles/
+
+# venv
+venv/
+env/
+.env
+
+# ide
+.DS_Store
+
+# project specific
+certificates/*
+!certificates/.gitkeep

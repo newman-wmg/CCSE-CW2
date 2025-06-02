@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #f8f9fa; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .footer { text-align: center; padding: 20px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Your Order Has Been Shipped!</h2>
+        </div>
+        <div class="content">
+            <p>Dear {{ order.user.get_full_name|default:order.user.username }},</p>
+            <p>Great news! Your order #{{ order.id }} has been shipped.</p>
+            
+            {% if order.tracking_number %}
+            <p>Tracking Number: {{ order.tracking_number }}</p>
+            {% endif %}
+            
+            {% if order.estimated_delivery %}
+            <p>Estimated Delivery: {{ order.estimated_delivery|date:"F j, Y" }}</p>
+            {% endif %}
+            
+            <p>Order Summary:</p>
+            <ul>
+            {% for item in order.items.all %}
+                <li>{{ item.quantity }}x {{ item.product.name }} - ${{ item.price }}</li>
+            {% endfor %}
+            </ul>
+            
+            <p>Total Amount: ${{ order.total_amount }}</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for shopping with SecureCart!</p>
+        </div>
+    </div>
+</body>
+</html> 
