@@ -35,4 +35,4 @@ python-dotenv
 whitenoise
 
 # Production server
-gunicorn==21.2.0
+gunicorn
